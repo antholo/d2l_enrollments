@@ -1,0 +1,7 @@
+app_config.cfg
+app_config.py
+
+*.pyc
+
+old_files/
+venv3/

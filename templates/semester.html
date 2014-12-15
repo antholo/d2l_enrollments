@@ -1,0 +1,16 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+	<h2>Semester select!!!</h2>
+	<form role="form" method="post" action="">
+		<p>Please select the semester and year from the choices below</p>
+		{{ form.csrf_token }}
+		<p>
+			{{ form.semester }}
+			{{ form.year }}
+		</p>
+		<p><button type="submit">Submit</p>
+	</form>
+
+{% endblock %}

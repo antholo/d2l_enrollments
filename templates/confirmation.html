@@ -1,0 +1,8 @@
+{% extends "template.html" %}
+{% block content %}
+	<h2>Confirmation</h2>
+		<p>You have asked to have the following courses combined:</p>
+			{% for row in coursesToCombine %}
+			<p>{{ row['name'] }}</p>
+			{% endfor %}
+{% endblock %}
