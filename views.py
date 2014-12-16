@@ -134,16 +134,29 @@ def enrollment_handler():
 @login_required
 def confirm_selections():
     msg = Message(subject='Course Combine Confirmation',
-        recipients=['eportfolio@uwosh.edu', session['uniqueName'] + '@uwosh.edu'])
-    opening ="Hello {0} {1},\nYour request to combine the following courses:\nCourse Name (Course Id)\n".format(session['firstName'], session['lastName'])
-    courseTable = "\n".join("{!s} ({!s})".format(course['name'], course['courseId']) for course in session['coursesToCombine'])
-    closing = "If this is incorrect, please contact our D2L site administrator at d2l@uwosh.edu."
-    closingHTML = '''
-        <p>If this is incorrect, please contact our <a href="mailto:d2l@uwosh.edu">D2L site administrator.'''
-    msg.body = opening + courseTable + closing
+        recipients=[app.config['MAIL_DEFAULT_SENDER'], session['uniqueName'] + app.config['EMAIL_DOMAIN']])
+    msg.body = generate_msg_text(session['firstName'], session['lastName'], session['coursesToCombine'])
+    msg.html = generate_msg_html(session['firstName'], session['lastName'], session['coursesToCombine'])
     mail.send(msg)
     return render_template("confirmation.html", coursesToCombine=session['coursesToCombine'])
 
+
+def generate_msg_text(firstName, lastName, coursesToCombine):
+    opening ="Hello {0} {1},\nYour request to combine the following courses:\n\nCourse Name\t(Course Id)\n".format(firstName, lastName)
+    courseTable = "\n".join("{!s}\t({!s})".format(course['name'], course['courseId']) for course in coursesToCombine)
+    closing = "\nIf this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " ."
+    msg_body = opening + courseTable + closing
+    return msg_body
+
+
+def generate_msg_html(firstName, lastName, coursesToCombine):
+    opening ="<p>Hello {0} {1},</p><p>Your request to combine the following courses:</p>".format(firstName, lastName)
+    tableHead = "<table><thead><tr><th>Course Name</th><th>(Course Id)</th></thead>"
+    courseTable = "".join("<tr><td>{!s}</td><td>({!s})</td></tr>".format(course['name'], course['courseId']) for course in coursesToCombine)
+    tableClose = "</table>"
+    closing = "<p>If this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " .</p>"
+    msg_html = opening + tableHead + courseTable + tableClose + closing
+    return msg_html
 
 def get_semester(semester, year):
     '''

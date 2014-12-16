@@ -1,18 +1,997 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>D2L Course Combine Requester</title>
-	</head>
-	<body>
-		<div class="container">
-			{% for message in get_flashed_messages() %}
-				<div class="flash">{{ message }}</div>
-			{% endfor %}
-			{% if error %}
-				<p class="error"><strong>Error:</strong> {{ error }}</p>
-			{% endif %}
-			{% block content %}
-			{% endblock %}
-		</div>
-	</body>
+
+
+
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  
+    
+    
+    
+    
+
+
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="generator" content="Plone - http://plone.org" />
+
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+      <base href="http://www.uwosh.edu/d2lfaq/" /><!--[if lt IE 7]></base><![endif]-->
+    
+
+    
+        
+<link rel="kss-base-url" href="http://www.uwosh.edu/d2lfaq/" />
+
+  
+    <link rel="stylesheet" type="text/css" href="http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/base-cachekey6984.css" />
+        <!--[if lt IE 8]>    
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/IEFixes-cachekey7092.css" />
+        <![endif]-->
+    
+    <style type="text/css" media="screen">@import url(http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/uwosh_theme-cachekey0510.css);</style>
+    <style type="text/css">@import url(http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/uwosh_flash_styles-cachekey4997.css);</style>
+    <style type="text/css" media="screen">@import url(http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/resourceplonetruegallery-portlet-cachekey2228.css);</style>
+    <link rel="stylesheet" type="text/css" media="all" href="http://www.uwosh.edu/d2lfaq/portal_css/uwosh.themecollege/ploneCustom-cachekey2653.css" />
+
+  
+    <link rel="kinetic-stylesheet" type="text/css" href="http://www.uwosh.edu/d2lfaq/portal_kss/uwosh.themecollege/resourcetinymce.ksstinymce-cachekey9557.kss" />
+    <link rel="kinetic-stylesheet" type="text/css" href="http://www.uwosh.edu/d2lfaq/portal_kss/uwosh.themecollege/at-cachekey6780.kss" />
+  
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/jquery.js"></script>
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/jquery-integration-cachekey1438.js"></script>
+       <!--[if lt IE 8]>
+     
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/iefixes-cachekey9113.js"></script>
+       <![endif]-->
+     
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/uwosh-cachekey3506.js"></script>
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/flowplayer.min-cachekey3577.js"></script>
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/jquery.ba-hashchange.min-cachekey5769.js"></script>
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/jquery.contentPagin8tor-cachekey1467.js"></script>
+    <script type="text/javascript" src="http://www.uwosh.edu/d2lfaq/portal_javascripts/uwosh.themecollege/contentPagin8tor-integration-cachekey8932.js"></script>
+
+
+<title>UW Oshkosh Desire2Learn FAQ</title>
+
+        
+    <link rel="author" href="http://www.uwosh.edu/d2lfaq/author/" title="Author information" />
+
+
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.uwosh.edu/d2lfaq/favicon.ico" />
+    <link rel="apple-touch-icon" href="http://www.uwosh.edu/d2lfaq/touch_icon.png" />
+
+
+
+    <link rel="home" href="http://www.uwosh.edu/d2lfaq/d2l-login" title="Front page" />
+
+    <link rel="contents" href="http://www.uwosh.edu/d2lfaq/d2l-login/sitemap" title="Site Map" />
+
+
+
+
+
+
+    <link rel="search" href="http://www.uwosh.edu/d2lfaq/d2l-login/search_form" title="Search this site" />
+
+
+
+        <!-- Disable IE6 image toolbar -->
+        <meta http-equiv="imagetoolbar" content="no" />
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+    
+
+  </head>
+
+  <body class="template-custom_search_form portaltype-plone-site icons-on" dir="ltr">
+    <div id="visual-portal-wrapper">
+
+      <div id="portal-top">
+        <div id="top_level_navigation">
+    <ul>
+        
+    
+        <li class=" about_uw_oshkoshNav">
+            <a href="http://www.uwosh.edu/home/about-uw-oshkosh">About UW Oshkosh</a>
+        </li>
+    
+    
+        <li class=" academicsNav">
+            <a href="http://www.uwosh.edu/home/future-students/undergraduate/academics">Academics</a>
+        </li>
+    
+    
+        <li class=" athleticsNav">
+            <a href=" http://www.titans.uwosh.edu/">Athletics</a>
+        </li>
+    
+    
+        <li class=" admissionsNav">
+            <a href=" http://admissions.uwosh.edu/">Admissions</a>
+        </li>
+    
+    
+        <li class=" administrationNav">
+            <a href="http://www.uwosh.edu/home/administration">Administration</a>
+        </li>
+    
+    
+        <li class=" resourcesNav">
+            <a href="http://www.uwosh.edu/home/resources">Resources</a>
+        </li>
+    
+    
+        <li class=" calendarsNav">
+            <a href="http://www.uwosh.edu/home/calendars">Calendars</a>
+        </li>
+    
+    <li class=" small-textNav">
+        <a href="javascript:setBaseFontSize('smallText', 1);">Small Text</a>
+    </li>
+    <li class=" normal-textNav">
+        <a href="javascript:setBaseFontSize('', 1);">Normal Text</a>
+    </li>
+    <li class=" large-textNav">
+        <a href="javascript:setBaseFontSize('largeText', 1);">Large Text</a>
+    </li>
+
+
+    
+    
+    <li id="titanServicesLink" class="titan_servicesNav">
+        <a href="http://www.uwosh.edu/home/titan-services-and-campus-resources#documentContent">Titan Services</a>
+
+        <div id="titanServicesLinks">
+            
+            <ul>
+            
+                <li class=" site_indexNav">
+                    <a href=" http://www.uwosh.edu/home/site-index/">Site Index</a>
+                </li>
+            
+            
+                <li class=" directoryNav">
+                    <a href=" http://www.uwosh.edu/directory/">Directory</a>
+                </li>
+            
+            
+                <li class=" titan_webNav">
+                    <a href=" http://www.uwosh.edu/registrar/titanweb/">Titan Web</a>
+                </li>
+            
+            
+                <li class=" titan_filesNav">
+                    <a href=" https://titanfiles.uwosh.edu/xythoswfs/webview/xythoslogin.action">Titan Files</a>
+                </li>
+            
+            
+                <li class=" Titan AppsNav">
+                    <a href=" http://mail.google.com/">Titan Apps (email)</a>
+                </li>
+            
+            
+                <li class=" uw_system_portalNav">
+                    <a href=" https://my.wisconsin.edu">My UW System</a>
+                </li>
+            
+            
+                <li class=" d2lNav">
+                    <a href=" http://www.uwosh.edu/d2l/">Desire2Learn (D2L)</a>
+                </li>
+            
+            
+                <li class=" library_resourcesNav">
+                    <a href=" http://www.uwosh.edu/library/">Polk Library</a>
+                </li>
+            
+            
+                <li class=" MyUWONav">
+                    <a href=" http://www.uwosh.edu/myuwo/">MyUWO</a>
+                </li>
+            
+            
+                <li class=" OrgSyncNav">
+                    <a href=" https://uwosh.collegiatelink.net/">Student Clubs &amp; Orgs</a>
+                </li>
+            
+            
+                <li class=" Titan JobsNav">
+                    <a href=" https://www.myinterfase.com/uwosh/student/">Titan Jobs</a>
+                </li>
+            
+            </ul>
+        </div>
+            
+    </li>
+    
+    </ul>
+</div>
+
+
+<div id="uwosh_banner_body">
+    <div id="uwosh_logo">
+        <a href="http://www.uwosh.edu/home"><img src=" http://www.uwosh.edu/d2lfaq/logo.png"></a>
+    </div>
+    <div id="audienceNav">
+        <ul>
+            
+        <li class="future_studentsAudienceNav">
+            <a href="http://www.uwosh.edu/home/future-students">Future Students</a>
+        </li>
+        
+            
+        <li class="parentsAudienceNav">
+            <a href="http://www.uwosh.edu/home/parents-and-family">Parents</a>
+        </li>
+        
+            
+        <li class="alumniAudienceNav">
+            <a href=" http://www.uwosh.edu/alumni">Alumni</a>
+        </li>
+        
+            
+        <li class="faculty_and_staffAudienceNav">
+            <a href="http://www.uwosh.edu/home/faculty-staff">Faculty and Staff</a>
+        </li>
+        
+            
+        <li class="current_studentsAudienceNav">
+            <a href="http://www.uwosh.edu/home/current-students">Current Students</a>
+        </li>
+        
+        </ul>
+
+<!--Search -->
+<div id="google-searchbox" class="uwosh-searchbox" style="display:none">
+    <form action="http://www.uwosh.edu/d2lfaq/uwosh-search" id="searchbox_016914008736719096284:eascmls-b2u" class="uwosh-searchbox" onsubmit="return false;">
+        <div class="LSBox">
+            <input class="inputLabelActive" title="Search Campus" type="text" name="q" size="18" />
+            <input class="searchButton" type="submit" value="Search" />
+            <div class="searchSection">
+                <input id="portal-searchbox-checkbox-campus" class="noborder" type="checkbox" checked="true" name="search_entire_campus" />
+                <label for="portal-searchbox-checkbox-campus" style="cursor: pointer">
+                    search entire campus
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_016914008736719096284%3Aeascmls-b2u&amp;lang=en">
+    </script>
+
+    <div id="results_016914008736719096284:eascmls-b2u" style="display:none">
+        <div class="cse-closeResults">
+            <a>&times; Close</a>
+        </div>
+        <div class="cse-resultsContainer"></div>
+    </div>
+
+    <style type="text/css">
+    @import url(http://www.google.com/cse/api/overlay.css);
+    </style>
+
+    <script src="http://www.google.com/uds/api?file=uds.js&amp;v=1.0&amp;key=ABQIAAAA_hxp3RI8qqPYVC9t6pA8shRbJimFOXjwfZ7D6AgkUmNWU0eYjBTgBg715rbnb0xGjGheQwXJTgv0ww&amp;hl=en" type="text/javascript"></script>
+    <script src="http://www.google.com/cse/api/overlay.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    function OnLoad() {
+        new CSEOverlay("016914008736719096284:eascmls-b2u",
+                document.getElementById("searchbox_016914008736719096284:eascmls-b2u"),
+                document.getElementById("results_016914008736719096284:eascmls-b2u")
+        );
+    }
+    GSearch.setOnLoadCallback(OnLoad);
+    </script>
+
+</div>
+    <div id="portal-searchbox" class="uwosh-searchbox" style="">
+        
+        <form name="searchform" id="searchbox_016914008736719096284:eascmls-b2u" action="http://www.uwosh.edu/d2lfaq/uwosh-search">
+
+            <label for="searchGadget" class="hiddenStructure">
+                Search Site
+            </label>
+
+            <div class="LSBox">
+                <input name="SearchableText" type="text" size="18" title="Search Site" accesskey="4" class="inputLabel" id="searchGadget" />
+
+                <input class="searchButton" type="submit" value="Search" />
+                <div class="searchSection">
+                    <input id="portal-searchbox-checkbox-site" class="noborder" type="checkbox" name="search_entire_campus" />
+                    <label for="portal-searchbox-checkbox-site" style="cursor: pointer">
+                        search entire campus
+                    </label>
+                </div>
+                <div class="LSResult" id="LSResult" style="">
+                    <div class="LSShadow" id="LSShadow">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+        
+</div>
+
+<!-- END Search -->
+
+</div>
+
+<div id="mainImage" style="min-height:0px">
+    
+    <noscript>
+        <img alt="Main Image" src="False" />
+    </noscript>
+    
+</div>
+
+
+<div id="collegeViewlet">
+<div>
+  <a href="http://www.uwosh.edu/d2lfaq">
+    <h1 id="organizationType"></h1>
+    <h1 id="organization">UW Oshkosh Desire2Learn FAQ</h1>
+  </a>
+</div>
+
+
+</div>
+<div id="portal-personaltools-wrapper">
+
+<h5 class="hiddenStructure">Personal tools</h5>
+
+
+</div>
+
+      </div>
+
+      <div class="visualClear" id="clear-space-before-wrapper-table"><!-- --></div>
+
+      <table id="portal-columns">
+        <tbody>
+          <tr>
+            
+                
+                <td id="portal-column-one">
+                  <div class="visualPadding">
+                    
+                      
+<div id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f7369746573312f446573697265324c6561726e0a6e617669676174696f6e" class="portletWrapper kssattr-portlethash-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f7369746573312f446573697265324c6561726e0a6e617669676174696f6e">
+<dl class="portlet portletNavigationTree">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <a href="http://www.uwosh.edu/d2lfaq/sitemap" class="tile">Navigation</a>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <dd class="portletItem lastItem">
+        <ul class="navTree navTreeLevel0">
+            <li class="navTreeItem navTreeTopNode navTreeCurrentNode">
+                <div>
+                   <a href="http://www.uwosh.edu/d2lfaq" class="contenttype-plone-site navTreeCurrentItem" title="">
+                   Home
+                   
+                   </a>
+                </div>
+            </li>
+            
+
+
+
+<li class="navTreeItem visualNoMarker section-new-search">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/new-search" class="state-published contenttype-link" title="">
+            
+            <span>New Search</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-d2l-login">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/d2l-login" class="state-published navTreeFolderish contenttype-folder" title="Blahh">
+            
+            <span>D2L Login</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-classlist">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/classlist" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Classlist</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-content">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/content" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Content</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-discussions">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/discussions" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Discussions</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-dropbox">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/dropbox" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Dropbox</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-grades">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/grades" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Grades</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-eportfolio">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/eportfolio" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>ePortfolio</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-general">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/general" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>General</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-quizzes">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/quizzes" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Quizzes</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-other-tools">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/other-tools" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Other Tools</span>
+        </a>
+
+    
+    
+</li>
+
+
+<li class="navTreeItem visualNoMarker navTreeFolderish section-archive">
+
+    
+
+
+        <a href="http://www.uwosh.edu/d2lfaq/archive" class="state-published navTreeFolderish contenttype-folder" title="">
+            
+            <span>Archive</span>
+        </a>
+
+    
+    
+</li>
+
+
+
+
+        </ul>
+        <span class="portletBottomLeft"></span>
+        <span class="portletBottomRight"></span>
+    </dd>
+</dl>
+
+</div>
+
+
+
+
+                    
+                    &nbsp;
+                  </div>
+                </td>
+                
+            
+
+            
+            <td id="portal-column-content">
+
+              <div id="viewlet-above-content">
+
+<div id="portlets-above">
+        
+        
+        <div class="portletsAboveContentA">
+
+</div> 
+
+        <div class="portletsAboveContentB">
+
+</div> 
+
+        <div class="portletsAboveContentC">
+
+</div> 
+
+        <div class="portletsAboveContentD">
+
+</div>
+
+        <div class="portletsAboveContentE">
+
+</div>
+
+        <div class="portletsAboveContentF">
+
+</div>
+    
+    
+
+    
+</div>
+</div>
+
+              
+                <div class="">
+
+                    
+
+                    <span id="contentTopLeft"></span>
+                    <span id="contentTopRight"></span>
+
+                    
+
+    <dl class="portalMessage info" id="kssPortalMessage" style="display:none">
+        <dt>Info</dt>
+        <dd></dd>
+    </dl>
+
+
+
+                    
+                    <div id="content">
+                        <h1 class="documentFirstHeading">Course Combine Request</h1>
+                        {% for message in get_flashed_messages() %}
+                        <div class="flash">{{ message }}</div>
+                        {% endfor %}
+                        {% if error %}
+                        <p class="error"><strong>Error:</strong> {{ error }}</p>
+                        {% endif %}
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                    
+
+                    
+
+                    <span id="contentBottomLeft"></span>
+                    <span id="contentBottomRight"></span>
+
+                </div>
+              
+
+              <div id="viewlet-below-content">
+
+
+<div id="portlets-below">
+    
+        
+
+        <div class="portletsBelowContentA">
+
+
+<div id="portletwrapper-436f6e74656e7457656c6c506f72746c6574732e42656c6f77506f72746c65744d616e61676572310a636f6e746578740a2f7369746573312f446573697265324c6561726e0a64326c2d6661712d666565646261636b" class="portletWrapper kssattr-portlethash-436f6e74656e7457656c6c506f72746c6574732e42656c6f77506f72746c65744d616e61676572310a636f6e746578740a2f7369746573312f446573697265324c6561726e0a64326c2d6661712d666565646261636b">
+<dl class="portlet portletStaticText portlet-static-d2l-faq-feedback">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span>
+           D2L FAQ Feedback
+        </span>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <dd class="portletItem odd">
+        <p>If you have a question about D2L which we haven't answered in the Frequently Asked Questions or notice anything that is unclear please let us know and we will review the content.</p>
+<p>Please contact d2l [at] uwosh [dot] edu</p>
+        
+            <span class="portletBottomLeft"></span>
+            <span class="portletBottomRight"></span>
+        
+    </dd>
+    
+    
+
+</dl>
+</div>
+
+</div> 
+
+        <div class="portletsBelowContentB">
+
+</div> 
+
+        <div class="portletsBelowContentC">
+
+</div> 
+
+        <div class="portletsBelowContentD">
+
+</div>
+
+        <div class="portletsBelowContentE">
+
+</div>
+
+        <div class="portletsBelowContentF">
+
+</div>
+    
+    
+
+    
+</div>
+
+
+</div>
+
+            </td>
+            
+
+            
+                
+                
+                
+            
+          </tr>
+        </tbody>
+      </table>
+      
+
+      <div class="visualClear" id="clear-space-before-footer"><!-- --></div>
+
+      
+
+        <div id="uwoshFooter">
+
+    
+    <ul class="footerMap footMapColumn1">
+        
+        
+        <li class="future_studentsMap">
+            <a href="http://www.uwosh.edu/home/future-students">Future Students</a>
+        </li>
+        
+        
+        
+        <li class="parentsMap">
+            <a href="http://www.uwosh.edu/home/parents-and-family">Parents</a>
+        </li>
+        
+        
+        
+        <li class="alumniMap">
+            <a href=" http://www.uwosh.edu/alumni">Alumni</a>
+        </li>
+        
+        
+        
+        <li class="faculty_and_staffMap">
+            <a href="http://www.uwosh.edu/home/faculty-staff">Faculty and Staff</a>
+        </li>
+        
+        
+        
+        <li class="current_studentsMap">
+            <a href="http://www.uwosh.edu/home/current-students">Current Students</a>
+        </li>
+        
+        
+        
+        <li class="about_uw_oshkoshMap">
+            <a href="http://www.uwosh.edu/home/about-uw-oshkosh">About UW Oshkosh</a>
+        </li>
+        
+        
+        
+        <li class="academicsMap">
+            <a href="http://www.uwosh.edu/home/future-students/undergraduate/academics">Academics</a>
+        </li>
+        
+    </ul>
+    
+    
+    <ul class="footerMap footMapColumn2">
+        
+        
+        <li class="athleticsMap">
+            <a href=" http://www.titans.uwosh.edu/">Athletics</a>
+        </li>
+        
+        
+        
+        <li class="admissionsMap">
+            <a href=" http://admissions.uwosh.edu/">Admissions</a>
+        </li>
+        
+        
+        
+        <li class="administrationMap">
+            <a href="http://www.uwosh.edu/home/administration">Administration</a>
+        </li>
+        
+        
+        
+        <li class="resourcesMap">
+            <a href="http://www.uwosh.edu/home/resources">Resources</a>
+        </li>
+        
+        
+        
+        <li class="calendarsMap">
+            <a href="http://www.uwosh.edu/home/calendars">Calendars</a>
+        </li>
+        
+        
+        
+        <li class="media_relationsMap">
+            <a href=" http://www.uwosh.edu/imc/media-relations/newsroom">Media Relations</a>
+        </li>
+        
+    </ul>
+    
+    
+    <ul class="footerMap footMapColumn3">
+        
+        
+        <li class="community_and_visitorsMap">
+            <a href="http://www.uwosh.edu/home/community-and-visitors">Community &amp; Visitors</a>
+        </li>
+        
+        
+        
+        <li class="careersMap">
+            <a href=" http://www.uwosh.edu/hr/jobs.php">Work at UW Oshkosh</a>
+        </li>
+        
+        
+        
+        <li class="career_servicesMap">
+            <a href="http://www.uwosh.edu/career/">Career Services</a>
+        </li>
+        
+        
+        
+        <li class="titan_servicesMap">
+            <a href="http://www.uwosh.edu/home/titan-services-and-campus-resources#documentContent">Titan Services</a>
+        </li>
+        
+        
+        
+        <li class="contact_usMap">
+            <a href="http://www.uwosh.edu/home/contact-us">Contact Us</a>
+        </li>
+        
+        
+        
+        <li class="accessibilityMap">
+            <a href="http://www.uwosh.edu/d2lfaq/accessibility-info">Accessibility</a>
+        </li>
+        
+    </ul>
+    
+
+    <div id="resources">
+        <table>
+            <tr>
+                <td>
+                    <a href="http://www.uwosh.edu/chancellor/systemofaccountability/" target="_blank">
+                        <img src="http://www.uwosh.edu/d2lfaq/collegePortrait.gif" />
+                    </a>
+                </td>
+                <td>
+                    <a href="http://www.wisconsin.edu/" target="_blank">
+                        <img src="http://www.uwosh.edu/d2lfaq/uwSystem.gif" />
+                    </a>
+                </td>
+                <td>
+                    <a href="http://www.uwosh.edu/" target="_blank">
+                        <img src="http://www.uwosh.edu/d2lfaq/uwoLogo.gif" />
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="portal-colophon">
+      
+
+      
+
+      <div class="colophonWrapper">
+
+    <div class="copyright">
+      <p>Copyright 2014 
+      The Board of Regents of the University of Wisconsin System
+      </p>
+    </div>
+
+    <div class="poweredbyplone">
+      <a href="http://plone.org" title="This site was built using Plone CMS, the Open Source Content Management System. Click for more information.">
+            Powered by Plone</a>
+    </div>
+
+    <div class="colophonLogin">
+      <a id="site_action_sitemap" href="sitemap">site map</a>
+      <a id="site_action_accessibility" href="accessibility-info">accessibility</a>
+      <a id="site_action_contact" href="contact-info">contact</a>
+      <a href="http://www.uwosh.edu/ploneprojects/help">get help</a>
+      <a href="http://www.uwosh.edu/d2lfaq/login_form">log in</a>
+    </div>
+
+    
+
+      </div>
+
+    </div>
+
+<div id="footer-portlets" class="row">
+    
+        
+
+        <div class="FooterPortletA">
+
+</div> 
+
+        <div class="FooterPortletB">
+
+</div> 
+
+        <div class="FooterPortletC">
+
+</div> 
+
+        <div class="FooterPortletD">
+
+</div>
+
+        <div class="FooterPortletE">
+
+</div>
+
+        <div class="FooterPortletF">
+
+</div>
+    
+    
+
+    
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1581582-40']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+      
+
+      <div class="visualClear"><!-- --></div>
+    </div>
+<div id="kss-spinner"><img alt="" src="http://www.uwosh.edu/d2lfaq/spinner.png" /></div>
+</body>
 </html>

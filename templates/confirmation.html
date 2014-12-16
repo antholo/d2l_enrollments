@@ -1,8 +1,11 @@
 {% extends "template.html" %}
 {% block content %}
-	<h2>Confirmation</h2>
+	<h2>Step 4: Confirmation</h2>
 		<p>You have asked to have the following courses combined:</p>
 			{% for row in coursesToCombine %}
 			<p>{{ row['name'] }}</p>
 			{% endfor %}
+        <p>We've sent an email to your D2L site administrator.</p>
+        <p>Please have patience.</p>
+        <p>You will not see an instant change in D2L--your site administrator will manually make these combinations as she is able.</p>  
 {% endblock %}

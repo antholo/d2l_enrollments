@@ -1,0 +1,26 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+    <h1 class="documentFirstHeading">Semester select!!!</h1>
+    <form role="form" method="post" action="">
+        <p>Please select the semester and year from the choices below</p>
+        {{ form.csrf_token }}
+        <p>
+            {{ form.semester }}
+            {{ form.year }}
+        </p>
+        <p>Select two or more courses you would like combined into a single course in D2L.
+        <br /> 
+        If you have several combination requests, please submit them separately.
+        </p>
+        {% if session['semCode'] %}
+        {{ form.courseIds }}
+        {% else %}
+        Options will load after you select semester and year.
+        {% endif %}
+        </p>
+        <p><button type="submit">Submit</p>
+    </form>
+
+{% endblock %}
