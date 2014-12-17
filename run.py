@@ -38,7 +38,7 @@ def logout():
     return redirect(os.environ['REDIRECT_AFTER_LOGOUT'])
 
 
-@app.route('/')
+#@app.route('/')
 @app.route('/login')
 def login():
     '''
