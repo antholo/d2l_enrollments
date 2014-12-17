@@ -68,7 +68,9 @@ def auth_handler():
     session['firstName'] = r.json()['FirstName']
     session['lastName'] = r.json()['LastName']
     session['userId'] = r.json()['Identifier']
+
     """PRODUCTION: UNCOMMENT FOLLOWING LINE AND DELETE THE ONE AFTER THAT"""
+    
     #session['uniqueName'] = r.json()['UniqueName']
     session['uniqueName'] = 'lookerb'
 
@@ -97,8 +99,6 @@ def select_semester():
             #semCode = get_semester(request.form['semester'], request.form['year'])
             semCode = get_semester(form.semester.data, form.year.data)
             session['semCode'] = semCode
-
-            print("TESTING", session['courseDict'][semCode])
 
             try:
                 courseDict = session['courseDict'][semCode]
