@@ -6,13 +6,13 @@ from functools import wraps
 from form import SelectSemesterForm, SelectCoursesForm
 import requests
 import os
-#import d2lvalence.auth as d2lauth
 import auth2 as d2lauth
 
 
 app = Flask(__name__)
 app.config.from_pyfile('app_config.cfg')
 mail = Mail(app)
+app.secret_key = os.urandom(24)
 
 appContext = d2lauth.fashion_app_context(app_id=app.config['APP_ID'],
                                          app_key=app.config['APP_KEY'])
@@ -30,12 +30,13 @@ def login_required(test):
 
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.pop('userContext')
-    redirect(app.config['REDIRECT_AFTER_LOGOUT'])
+    session.clear()
+    return redirect(app.config['REDIRECT_AFTER_LOGOUT'])
 
 
-@app.route('/')#, methods=['GET', 'POST'])
+@app.route('/')
 @app.route('/login')
 def login():
     '''
@@ -49,19 +50,15 @@ def login():
             host=app.config['LMS_HOST'], 
             client_app_url=app.config['AUTH_CB'],
             encrypt_request=app.config['ENCRYPT_REQUESTS'])
-        #print(authUrl)
         return render_template('login.html', authUrl=authUrl)
 
 
-@app.route(app.config['AUTH_ROUTE'])#, method='GET')
+@app.route(app.config['AUTH_ROUTE'])
 def auth_handler():
-    #print("Request uri", request.url)
     uc = appContext.create_user_context(
         result_uri=request.url, 
         host=app.config['LMS_HOST'],
         encrypt_requests=app.config['ENCRYPT_REQUESTS'])
-    #print("User Context", uc)
-    # call whoami and store user info
     my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(app.config['VER']))
     r = requests.get(my_url)
     print('WHOAMI', r.json())
@@ -96,7 +93,6 @@ def select_semester():
         session.pop('coursesToCombine')
     if request.method == 'POST':
         if form.is_submitted():
-            #semCode = get_semester(request.form['semester'], request.form['year'])
             semCode = get_semester(form.semester.data, form.year.data)
             session['semCode'] = semCode
 
@@ -118,8 +114,6 @@ def enrollment_handler():
     error = None
     uc = appContext.create_user_context(
             d2l_user_context_props_dict=session['userContext'])
-    #if 'courseDict' not in session:
-        #session['courseDict'] = get_courses(uc)
     courseDict = session['courseDict'][session['semCode']]
     form = SelectCoursesForm(request.form)
     form.courseIds.choices = [(course['courseId'], course['name']) for course in courseDict]
@@ -217,9 +211,6 @@ def get_courses(uc):
         else:
             end = True
     return courseDict
-
-
-app.secret_key = os.urandom(24)
 
 
 if __name__ == '__main__':
