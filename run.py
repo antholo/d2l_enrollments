@@ -10,14 +10,14 @@ import auth2 as d2lauth
 
 
 app = Flask(__name__)
-for k in os.environ:
-    app.config[k]
-app.config['AUTH_CB'] = '{0}://{1}:{2}{3}'.format(app.config['SCHEME'], app.config['HOST'], app.config['PORT'], app.config['AUTH_ROUTE'])
+#for k in os.environ:
+#    app.config[k]
+app.config['AUTH_CB'] = '{0}://{1}:{2}{3}'.format(os.environ['SCHEME'], os.environ['HOST'], os.environ['PORT'], os.environ['AUTH_ROUTE'])
 mail = Mail(app)
 app.secret_key = os.urandom(24)
 
-appContext = d2lauth.fashion_app_context(app_id=app.config['APP_ID'],
-                                         app_key=app.config['APP_KEY'])
+appContext = d2lauth.fashion_app_context(app_id=os.environ['APP_ID'],
+                                         app_key=os.environ['APP_KEY'])
 
 
 def login_required(test):
@@ -35,7 +35,7 @@ def login_required(test):
 @login_required
 def logout():
     session.clear()
-    return redirect(app.config['REDIRECT_AFTER_LOGOUT'])
+    return redirect(os.environ['REDIRECT_AFTER_LOGOUT'])
 
 
 @app.route('/')
@@ -46,22 +46,22 @@ def login():
     If not, renders login template with link to D2L login and callback route to authorization handler.
     '''
     if 'userContext' in session:
-        return redirect(url_for(app.config['AUTH_ROUTE']))
+        return redirect(url_for(os.environ['AUTH_ROUTE']))
     else:
         authUrl = appContext.create_url_for_authentication(
-            host=app.config['LMS_HOST'], 
-            client_app_url=app.config['AUTH_CB'],
-            encrypt_request=app.config['ENCRYPT_REQUESTS'])
+            host=os.environ['LMS_HOST'], 
+            client_app_url=os.environ['AUTH_CB'],
+            encrypt_request=os.environ['ENCRYPT_REQUESTS'])
         return render_template('login.html', authUrl=authUrl)
 
 
-@app.route(app.config['AUTH_ROUTE'])
+@app.route(os.environ['AUTH_ROUTE'])
 def auth_handler():
     uc = appContext.create_user_context(
         result_uri=request.url, 
-        host=app.config['LMS_HOST'],
-        encrypt_requests=app.config['ENCRYPT_REQUESTS'])
-    my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(app.config['VER']))
+        host=os.environ['LMS_HOST'],
+        encrypt_requests=os.environ['ENCRYPT_REQUESTS'])
+    my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(os.environ['VER']))
     r = requests.get(my_url)
     print('WHOAMI', r.json())
     session['firstName'] = r.json()['FirstName']
@@ -74,8 +74,8 @@ def auth_handler():
     session['uniqueName'] = 'lookerb'
 
     # feed in service account ID and key and store user context
-    uc.user_id = app.config['USER_ID']
-    uc.user_key = app.config['USER_KEY']
+    uc.user_id = os.environ['USER_ID']
+    uc.user_key = os.environ['USER_KEY']
     session['userContext'] = uc.get_context_properties()
 
     # get the dictionary of user's enrollments
@@ -145,7 +145,7 @@ def enrollment_handler():
 @login_required
 def confirm_selections():
     msg = Message(subject='Course Combine Confirmation',
-        recipients=[app.config['MAIL_DEFAULT_SENDER'], session['uniqueName'] + app.config['EMAIL_DOMAIN']])
+        recipients=[os.environ['MAIL_DEFAULT_SENDER'], session['uniqueName'] + os.environ['EMAIL_DOMAIN']])
     msg.body = generate_msg_text(session['firstName'], session['lastName'], session['coursesToCombine'])
     msg.html = generate_msg_html(session['firstName'], session['lastName'], session['coursesToCombine'])
     mail.send(msg)
@@ -155,7 +155,7 @@ def confirm_selections():
 def generate_msg_text(firstName, lastName, coursesToCombine):
     opening ="Hello {0} {1},\nYour request to combine the following courses:\n\nCourse Name\t(Course Id)\n".format(firstName, lastName)
     courseTable = "\n".join("{!s}\t({!s})".format(course['name'], course['courseId']) for course in coursesToCombine)
-    closing = "\nIf this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " ."
+    closing = "\nIf this is incorrect, please contact our D2L site administrator at " + os.environ['EMAIL_SITE_ADMIN'] + " ."
     msg_body = opening + courseTable + closing
     return msg_body
 
@@ -165,7 +165,7 @@ def generate_msg_html(firstName, lastName, coursesToCombine):
     tableHead = "<table><thead><tr><th>Course Name</th><th>(Course Id)</th></thead>"
     courseTable = "".join("<tr><td>{!s}</td><td>({!s})</td></tr>".format(course['name'], course['courseId']) for course in coursesToCombine)
     tableClose = "</table>"
-    closing = "<p>If this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " .</p>"
+    closing = "<p>If this is incorrect, please contact our D2L site administrator at " + os.environ['EMAIL_SITE_ADMIN'] + " .</p>"
     msg_html = opening + tableHead + courseTable + tableClose + closing
     return msg_html
 
@@ -193,10 +193,10 @@ def get_courses(uc):
     Creates dictionary of lists of courses keyed by semester code and stores 
     it in session for easy access post-creation.
     '''
-    myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/enrollments/users/{1}/orgUnits/'.format(app.config['VER'], session['userId']))
+    myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/enrollments/users/{1}/orgUnits/'.format(os.environ['VER'], session['userId']))
     kwargs = {'params': {}}
-    kwargs['params'].update({'roleId':app.config['ROLE_ID']})
-    kwargs['params'].update({'orgUnitTypeId': app.config['ORG_UNIT_TYPE_ID']})
+    kwargs['params'].update({'roleId':os.environ['ROLE_ID']})
+    kwargs['params'].update({'orgUnitTypeId': os.environ['ORG_UNIT_TYPE_ID']})
     r = requests.get(myUrl, **kwargs)
     courseDict = {}
     end = False
