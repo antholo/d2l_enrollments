@@ -10,8 +10,8 @@ import auth2 as d2lauth
 
 
 app = Flask(__name__)
-for k,v in os.environ:
-    app.config[k] = v
+for k in os.environ:
+    app.config[k]
 app.config['AUTH_CB'] = '{0}://{1}:{2}{3}'.format(app.config['SCHEME'], app.config['HOST'], app.config['PORT'], app.config['AUTH_ROUTE'])
 mail = Mail(app)
 app.secret_key = os.urandom(24)
