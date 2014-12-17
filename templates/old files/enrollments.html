@@ -1,8 +1,0 @@
-{% extends "template.html" %}
-{% block content %}
-	<h2>Submit your course combine request</h2>
-	<p>Select the courses you would like combined into a single course in D2L. If you have several combination requests, please submit them separately. Please ignore any courses that appear in which you are not the instructor--chances are that you are enrolled as an observer in those courses.</p>
-	{% for row in currentCourses %}
-		<p>Course Id: {{ row['OrgUnit']['Id'] }}, Course title: {{ row['OrgUnit']['Name'] }}, Access began: {{ row['Access']['StartDate'][:10] }}</p>
-	{% endfor %}
-{% endblock %}
