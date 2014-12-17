@@ -55,7 +55,8 @@ def login():
         return render_template('login.html', authUrl=authUrl)
 
 
-@app.route(os.environ.get('AUTH_ROUTE'))
+#@app.route(os.environ.get('AUTH_ROUTE'))
+@app.route('/token')
 def auth_handler():
     uc = appContext.create_user_context(
         result_uri=request.url, 
