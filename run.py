@@ -51,7 +51,7 @@ def login():
         authUrl = appContext.create_url_for_authentication(
             host=os.environ.get('LMS_HOST'), 
             client_app_url=os.environ.get('AUTH_CB'),
-            encrypt_request=os.environ.get('ENCRYPT_REQUESTS')
+            encrypt_request=os.environ.get('ENCRYPT_REQUESTS'))
         return render_template('login.html', authUrl=authUrl)
 
 
