@@ -3,7 +3,7 @@ app_config.py
 
 *.pyc
 
-templates/old_files/
+templates/old files/
 templates/alt_template/
 venv3/
 alt_files/
