@@ -29,6 +29,12 @@ def login_required(test):
     return wrap
 
 
+@app.route('/logout')
+def logout():
+    session.pop('userContext')
+    redirect(app.config['REDIRECT_AFTER_LOGOUT'])
+
+
 @app.route('/')#, methods=['GET', 'POST'])
 @app.route('/login')
 def login():
@@ -62,6 +68,7 @@ def auth_handler():
     session['firstName'] = r.json()['FirstName']
     session['lastName'] = r.json()['LastName']
     session['userId'] = r.json()['Identifier']
+    """PRODUCTION: UNCOMMENT FOLLOWING LINE AND DELETE THE ONE AFTER THAT"""
     #session['uniqueName'] = r.json()['UniqueName']
     session['uniqueName'] = 'lookerb'
 
@@ -69,10 +76,14 @@ def auth_handler():
     uc.user_id = app.config['USER_ID']
     uc.user_key = app.config['USER_KEY']
     session['userContext'] = uc.get_context_properties()
+
+    # get the dictionary of user's enrollments
+    if 'courseDict' not in session:
+        session['courseDict'] = get_courses(uc)
     return redirect(url_for('select_semester'))
 
 
-@app.route('/semester/', methods=['GET', 'POST'])
+@app.route('/semester', methods=['GET', 'POST'])
 @login_required
 def select_semester():
     error = None
@@ -86,6 +97,14 @@ def select_semester():
             #semCode = get_semester(request.form['semester'], request.form['year'])
             semCode = get_semester(form.semester.data, form.year.data)
             session['semCode'] = semCode
+
+            print("TESTING", session['courseDict'][semCode])
+
+            try:
+                courseDict = session['courseDict'][semCode]
+            except KeyError:
+                error = "No courses are listed with you enrolled as an instructor for that semester."
+                return render_template("semester.html", form=form, error=error)
         return redirect(url_for('enrollment_handler'))
     else:
         return render_template("semester.html", form=form, error=error)
@@ -95,17 +114,13 @@ def select_semester():
 @app.route('/enrollments', methods=['GET', 'POST'])
 @login_required
 def enrollment_handler():
-    '''if 'userContext' not in session:
-        print("Hey, where's the userContext?")
-        return redirect(url_for('login'))'''
 
+    error = None
     uc = appContext.create_user_context(
             d2l_user_context_props_dict=session['userContext'])
-    if 'courseDict' not in session:
-        session['courseDict'] = get_courses(uc)
-
+    #if 'courseDict' not in session:
+        #session['courseDict'] = get_courses(uc)
     courseDict = session['courseDict'][session['semCode']]
-    error = None
     form = SelectCoursesForm(request.form)
     form.courseIds.choices = [(course['courseId'], course['name']) for course in courseDict]
     if request.method == 'POST':
@@ -198,7 +213,7 @@ def get_courses(uc):
                 courseDict[semCode].append({'courseId': course['OrgUnit']['Id'], 'name': course['OrgUnit']['Name']})
             if r.json()['PagingInfo']['HasMoreItems'] == True:
                 kwargs['params']['bookmark'] = r.json()['PagingInfo']['Bookmark']
-                r = requests.get(my_url, **kwargs)
+                r = requests.get(myUrl, **kwargs)
         else:
             end = True
     return courseDict
