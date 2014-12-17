@@ -12,7 +12,7 @@ import auth2 as d2lauth
 app = Flask(__name__)
 #for k in os.environ:
 #    app.config[k]
-app.config['AUTH_CB'] = '{0}://{1}:{2}{3}'.format(os.environ['SCHEME'], os.environ['HOST'], os.environ['PORT'], os.environ['AUTH_ROUTE'])
+app.config['AUTH_CB'] = '{0}://{1}:{2}{3}'.format(os.environ.get('SCHEME'), os.environ['HOST'], os.environ['PORT'], os.environ['AUTH_ROUTE'])
 mail = Mail(app)
 app.secret_key = os.urandom(24)
 
@@ -38,7 +38,7 @@ def logout():
     return redirect(os.environ['REDIRECT_AFTER_LOGOUT'])
 
 
-#@app.route('/')
+@app.route('/')
 @app.route('/login')
 def login():
     '''
