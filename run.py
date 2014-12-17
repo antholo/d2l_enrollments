@@ -64,9 +64,9 @@ def auth_handler():
     my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(os.environ.get('VER')))
     r = requests.get(my_url)
     print('WHOAMI', r.json())
-    session['firstName'] = r.json()['FirstName')
-    session['lastName'] = r.json()['LastName')
-    session['userId'] = r.json()['Identifier')
+    session['firstName'] = r.json()['FirstName']
+    session['lastName'] = r.json()['LastName']
+    session['userId'] = r.json()['Identifier']
 
     """PRODUCTION: UNCOMMENT FOLLOWING LINE AND DELETE THE ONE AFTER THAT"""
     
