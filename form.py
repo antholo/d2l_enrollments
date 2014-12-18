@@ -1,7 +1,7 @@
 # enrollments/form.py
 
 from flask_wtf import Form
-from wtforms import SelectField, SelectMultipleField, widgets
+from wtforms import SelectField, SelectMultipleField, widgets, RadioField, TextField
 from datetime import date
 
 # semester values for four-digit semester codes
@@ -23,3 +23,13 @@ class SelectCoursesForm(Form):
 		widget=widgets.ListWidget(prefix_label=False),
 		option_widget=widgets.CheckboxInput(),
 		coerce=int)
+	baseCourse = RadioField('Select base course')
+
+class AdditionalCourseForm(Form):
+	termCode = TextField('Term Code')
+	duration = TextField('Duration')
+	subject = TextField('Subject')
+	catalog = TextField('Catalog Number')
+	section = TextField('Section')
+	classNumber = TextField('Class Number')
+	courseTitle = TextField('Course Title')
