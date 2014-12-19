@@ -1,7 +1,7 @@
 # enrollments/form.py
 
 from flask_wtf import Form
-from wtforms import SelectField, SelectMultipleField, widgets, RadioField, TextField
+from wtforms import SelectField, SelectMultipleField, widgets, RadioField, TextField, validators
 from datetime import date
 
 # semester values for four-digit semester codes
@@ -26,10 +26,20 @@ class SelectCoursesForm(Form):
 	baseCourse = RadioField('Select base course')
 
 class AdditionalCourseForm(Form):
-	termCode = TextField('Term Code')
-	duration = TextField('Duration')
-	subject = TextField('Subject')
-	catalog = TextField('Catalog Number')
-	section = TextField('Section')
-	classNumber = TextField('Class Number')
-	courseTitle = TextField('Course Title')
+	classNumber = TextField('Class Number', validators=[validators.required(), validators.Regexp(regex=r'\d{5}')])
+	sessionLength = SelectField('Session Length',
+		validators=[validators.required()],
+		choices=[
+			('8W', 'Eight Week'),
+			('4W1', 'Four Week - First'),
+			('4W2', 'Four Week - Second'),
+			('14W', 'Fourteen Week'),
+			('7W1', 'Seven Week - First'),
+			('7W2', 'Seven Week - Second'),
+			('17W', 'Seventeen Week'),
+			('10W', 'Ten Week'),
+			('3WI', 'Three Week Interim')
+			])
+	subject = TextField('Subject Code', validators=[validators.required(), validators.Regexp(regex=r'[a-zA-Z ]{8}')])
+	catalogNumber = TextField('Catalog Number', validators=[validators.required(), validators.Regexp(regex=r'\d{3}')])
+	section = TextField('First 4-digits of section', validators=[validators.required(), validators.Regexp(regex=r'\d{3}[a-zA-Z]{1}')])

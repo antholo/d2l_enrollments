@@ -3,7 +3,7 @@
 from flask import Flask, render_template, request, session, flash, redirect, url_for
 from flask_mail import Mail, Message
 from functools import wraps
-from form import SelectSemesterForm, SelectCoursesForm
+from form import SelectSemesterForm, SelectCoursesForm, AdditionalCourseForm
 import requests
 import os
 import auth2 as d2lauth
@@ -61,7 +61,9 @@ def auth_handler():
         encrypt_requests=app.config['ENCRYPT_REQUESTS'])
     my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(app.config['VER']))
     r = requests.get(my_url)
+
     print('WHOAMI', r.json())
+
     session['firstName'] = r.json()['FirstName']
     session['lastName'] = r.json()['LastName']
     session['userId'] = r.json()['Identifier']
@@ -119,25 +121,28 @@ def enrollment_handler():
     form = SelectCoursesForm(request.form)
     form.courseIds.choices = [(course['courseId'], course['name'] + ", " + course['parsed']) for course in courseDict]
     form.baseCourse.choices = [(course['courseId'], "<a target=\"_blank\" href='http://" + app.config['LMS_HOST'] + "/d2l/lp/manageCourses/course_offering_info_viewedit.d2l?ou=" + str(course['courseId']) + "'>" + course['name'] + ", " + course['parsed'] + "</a>") for course in courseDict]
+    add_form = AdditionalCourseForm(request.form)
     if request.method == 'POST':
         if form.is_submitted():
             courseIds = form.courseIds.data
             coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
             baseCourse = form.baseCourse.data
             session['baseCourse'] = baseCourse
-            comments = form.comments.data
             session['comments'] = comments
             if len(coursesToCombine) < 2:
                 error = 'You must select at least two courses to combine.'
-                return render_template("enrollments.html", form=form, error=error)
+                return render_template("enrollments.html", form=form, add_form=add_form, error=error)
             else:
                 session['coursesToCombine'] = coursesToCombine
                 return redirect(url_for('confirm_selections'))
         else:
             error = 'The form must be invalid for some reason...'
-            return render_template("enrollments.html", form=form, error=error)
+            return render_template("enrollments.html", form=form, add_form=add_form, error=error)
+        if add_form.is_submitted():
+            session['courseDict'][session['semCode']].append(add_course(courseDict, add_form.courseId.data))
+            return redirect("enrollments.html", form=form, add_form=add_form, error=error)
     else:
-        return render_template("enrollments.html", form=form)
+        return render_template("enrollments.html", form=form, add_form=add_form, error=error)
 
 
 @app.route('/confirmation')
@@ -197,6 +202,9 @@ def get_courses(uc):
     kwargs['params'].update({'roleId':app.config['ROLE_ID']})
     kwargs['params'].update({'orgUnitTypeId': app.config['ORG_UNIT_TYPE_ID']})
     r = requests.get(myUrl, **kwargs)
+
+    print(r.json()['Items'])
+
     courseDict = {}
     end = False
     while end == False:
@@ -217,6 +225,20 @@ def get_courses(uc):
             end = True
     return courseDict
 
+
+def add_course(courseId):
+    myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/orgstructure/{1}'.format(app.config['VER'], courseId))
+    r = requests.get(myUrl, **kwargs)
+    if r.json():
+        response = r.json()
+        print r.json()
+        courseInfo = {'courseId': courseId,
+            'name': response['Name'],
+            'code': response['Code'],
+            'parsed': parse_code(response['Code'])}
+        return courseInfo
+    else:
+        print r.reason()
 
 def parse_code(code):
     parsed = code.split("_")

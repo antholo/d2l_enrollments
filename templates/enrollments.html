@@ -10,7 +10,8 @@
 		<p>The link for each class opens the D2L course offering info page for that course in a new tab/window.</p>
 		<p>{{ form.baseCourse }}</p>
 		<h3>Additional courses or information</h3>
-		<p>If there are other courses you'd like combined that do not appear above, please provide their information below.</p>
+		<p>If there's a course you'd like combined that does not appear above, please enter it's class number below.</p>
+		{{ add_form.courseId }}
 	<p><button type="submit">Submit</p>
 	</form>
 {% endblock %}
