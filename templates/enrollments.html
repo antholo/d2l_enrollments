@@ -14,4 +14,15 @@
 		{{ add_form.courseId }}
 	<p><button type="submit">Submit</p>
 	</form>
+	<hr />
+	<form role="form" method="post" action="">
+		<h3>Add courses to the list above</h3>
+		<p>If there is a course you would like combined not listed above, please complete the form below with info from TitanWeb.</p>
+		<img src='{{ url_for(static/img/TitanWebSample.png) }}'>
+		<p>Subject (Ex: CRIM JUS)<br />{{ add_form.subject }}</p>
+		<p>Catalog # (Ex: 110)<br />{{ add_form.catalogNumber }}</p>
+		<p>Section (Ex: 091C)<br />{{ add_form.section }}</p>
+		<p>Class # (Ex: 92484)<br />{{ add_form.classNumber }}</p>
+		<p>Session Length<br />{{ add_form.sessionLength }}</p>
+	</form>
 {% endblock %}
