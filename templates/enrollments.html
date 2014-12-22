@@ -9,20 +9,19 @@
 		<p>If you've begun developing one of these courses in D2L, that's the one you should select as your base course.</p> 
 		<p>The link for each class opens the D2L course offering info page for that course in a new tab/window.</p>
 		<p>{{ form.baseCourse }}</p>
-		<h3>Additional courses or information</h3>
-		<p>If there's a course you'd like combined that does not appear above, please enter it's class number below.</p>
-		{{ add_form.courseId }}
-	<p><button type="submit">Submit</p>
+	<p><button type="submit">Submit</button></p>
 	</form>
 	<hr />
-	<form role="form" method="post" action="">
-		<h3>Add courses to the list above</h3>
+	<h3>Add courses to the list above</h3>
 		<p>If there is a course you would like combined not listed above, please complete the form below with info from TitanWeb.</p>
-		<img src='{{ url_for(static/img/TitanWebSample.png) }}'>
+		{{ add_form.courseId }}
+	<form role="form" method="post" action="">
+		<img src='{{ url_for('static', filename='img/TitanWebSample.png') }}'>
 		<p>Subject (Ex: CRIM JUS)<br />{{ add_form.subject }}</p>
 		<p>Catalog # (Ex: 110)<br />{{ add_form.catalogNumber }}</p>
 		<p>Section (Ex: 091C)<br />{{ add_form.section }}</p>
 		<p>Class # (Ex: 92484)<br />{{ add_form.classNumber }}</p>
 		<p>Session Length<br />{{ add_form.sessionLength }}</p>
+		<input type="submit" name="btn" value="Add Class" />
 	</form>
 {% endblock %}

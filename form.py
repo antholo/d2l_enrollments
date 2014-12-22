@@ -28,6 +28,7 @@ class SelectCoursesForm(Form):
 class AdditionalCourseForm(Form):
 	classNumber = TextField('Class Number', validators=[validators.required(), validators.Regexp(regex=r'\d{5}')])
 	sessionLength = SelectField('Session Length',
+		default='14W',
 		validators=[validators.required()],
 		choices=[
 			('8W', 'Eight Week'),

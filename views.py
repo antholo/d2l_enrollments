@@ -118,29 +118,46 @@ def enrollment_handler():
             d2l_user_context_props_dict=session['userContext'])
 
     courseDict = session['courseDict'][session['semCode']]
-    form = SelectCoursesForm(request.form)
+    form = SelectCoursesForm(request.form, prefix="form")
     form.courseIds.choices = [(course['courseId'], course['name'] + ", " + course['parsed']) for course in courseDict]
     form.baseCourse.choices = [(course['courseId'], "<a target=\"_blank\" href='http://" + app.config['LMS_HOST'] + "/d2l/lp/manageCourses/course_offering_info_viewedit.d2l?ou=" + str(course['courseId']) + "'>" + course['name'] + ", " + course['parsed'] + "</a>") for course in courseDict]
-    add_form = AdditionalCourseForm(request.form)
+    add_form = AdditionalCourseForm(request.form, prefix="add_form")
     if request.method == 'POST':
         if form.is_submitted():
             courseIds = form.courseIds.data
             coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
             baseCourse = form.baseCourse.data
             session['baseCourse'] = baseCourse
-            session['comments'] = comments
             if len(coursesToCombine) < 2:
-                error = 'You must select at least two courses to combine.'
-                return render_template("enrollments.html", form=form, add_form=add_form, error=error)
+                if request.form['btn'] == 'Add Class':
+                    code = '_'.join(('UWOSH',
+                        session['semCode'],
+                        add_form.sessionLength.data,
+                        add_form.subject.data,
+                        add_form.catalogNumber.data,
+                        'SEC' + add_form.section.data,
+                        add_form.classNumber.data))
+                    print(get_course(uc, code))
+                    courseToAdd = get_course(uc, code)
+                    #session['courseDict'][session['semCode']].append(add_course(courseDict, add_form.courseId.data))
+                    session['courseDict'][session['semCode']] = update_course_dict(courseDict,
+                        courseToAdd['Identifier'],
+                        courseToAdd['Name'],
+                        code)
+                    print(session['courseDict'][session['semCode']])
+                    return redirect(url_for('enrollment_handler'))
+                    #return render_template("enrollments.html", form=form, add_form=add_form, error=error)
+
+                else:    
+                    error = 'You must select at least two courses to combine.'
+                    return render_template("enrollments.html", form=form, add_form=add_form, error=error)
             else:
                 session['coursesToCombine'] = coursesToCombine
+                print(coursesToCombine)
                 return redirect(url_for('confirm_selections'))
         else:
             error = 'The form must be invalid for some reason...'
             return render_template("enrollments.html", form=form, add_form=add_form, error=error)
-        if add_form.is_submitted():
-            session['courseDict'][session['semCode']].append(add_course(courseDict, add_form.courseId.data))
-            return redirect("enrollments.html", form=form, add_form=add_form, error=error)
     else:
         return render_template("enrollments.html", form=form, add_form=add_form, error=error)
 
@@ -214,10 +231,15 @@ def get_courses(uc):
                 if semCode not in courseDict:
                     courseDict[semCode] = []
                 #courseDict[semCode].append({'courseId': course['OrgUnit']['Id'], 'name': course['OrgUnit']['Name']})
-                courseDict[semCode].append({'courseId': course['OrgUnit']['Id'],
+                """courseDict[semCode].append({'courseId': course['OrgUnit']['Id'],
                     'name': course['OrgUnit']['Name'],
                     'code': course['OrgUnit']['Code'],
-                    'parsed': parse_code(course['OrgUnit']['Code'])})
+                    'parsed': parse_code(course['OrgUnit']['Code'])})"""
+                courseDict[semCode] = update_course_dict(courseDict[semCode],
+                    course['OrgUnit']['Id'],
+                    course['OrgUnit']['Name'],
+                    course['OrgUnit']['Code'])
+
             if r.json()['PagingInfo']['HasMoreItems'] == True:
                 kwargs['params']['bookmark'] = r.json()['PagingInfo']['Bookmark']
                 r = requests.get(myUrl, **kwargs)
@@ -225,6 +247,18 @@ def get_courses(uc):
             end = True
     return courseDict
 
+
+def update_course_dict(courseDict, courseId, name, code):
+    courseDict.append({u'courseId': int(courseId), u'name': name, u'code': code, u'parsed': parse_code(code)})
+    return courseDict
+
+def get_course(uc, code):
+    myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/orgstructure/'.format(app.config['VER']))
+    kwargs = {'params': {}}
+    kwargs['params'].update({'orgUnitCode': code})
+    kwargs['params'].update({'orgUnitType': app.config['ORG_UNIT_TYPE_ID']})
+    r = requests.get(myUrl, **kwargs)
+    return r.json()['Items'][0]
 
 def add_course(courseId):
     myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/orgstructure/{1}'.format(app.config['VER'], courseId))
