@@ -62,7 +62,7 @@ def auth_handler():
     my_url = uc.create_authenticated_url('/d2l/api/lp/{0}/users/whoami'.format(app.config['VER']))
     r = requests.get(my_url)
 
-    print('WHOAMI', r.json())
+    #print('WHOAMI', r.json())
 
     session['firstName'] = r.json()['FirstName']
     session['lastName'] = r.json()['LastName']
@@ -126,7 +126,15 @@ def enrollment_handler():
         if form.is_submitted():
             courseIds = form.courseIds.data
             coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
-            baseCourse = form.baseCourse.data
+            baseCourse = {}
+            baseCourseId =  int(form.baseCourse.data)
+            for course in courseDict:
+                print('COURSE ID', course['courseId'])
+                print('BASE COURSE ID', baseCourseId)
+                if course['courseId'] == baseCourseId:
+                    baseCourse.update(course)
+                    print('BASECOURSE', baseCourse)
+            print('BASECOURSE', baseCourse)
             session['baseCourse'] = baseCourse
             if len(coursesToCombine) < 2:
                 if request.form['btn'] == 'Add Class':
@@ -137,14 +145,14 @@ def enrollment_handler():
                         add_form.catalogNumber.data,
                         'SEC' + add_form.section.data,
                         add_form.classNumber.data))
-                    print(get_course(uc, code))
+                    #print(get_course(uc, code))
                     courseToAdd = get_course(uc, code)
                     #session['courseDict'][session['semCode']].append(add_course(courseDict, add_form.courseId.data))
                     session['courseDict'][session['semCode']] = update_course_dict(courseDict,
                         courseToAdd['Identifier'],
                         courseToAdd['Name'],
                         code)
-                    print(session['courseDict'][session['semCode']])
+                    #print(session['courseDict'][session['semCode']])
                     return redirect(url_for('enrollment_handler'))
                     #return render_template("enrollments.html", form=form, add_form=add_form, error=error)
 
@@ -153,7 +161,7 @@ def enrollment_handler():
                     return render_template("enrollments.html", form=form, add_form=add_form, error=error)
             else:
                 session['coursesToCombine'] = coursesToCombine
-                print(coursesToCombine)
+                #print(coursesToCombine)
                 return redirect(url_for('confirm_selections'))
         else:
             error = 'The form must be invalid for some reason...'
@@ -167,22 +175,22 @@ def enrollment_handler():
 def confirm_selections():
     msg = Message(subject='Course Combine Confirmation',
         recipients=[app.config['MAIL_DEFAULT_SENDER'], session['uniqueName'] + app.config['EMAIL_DOMAIN']])
-    msg.body = generate_msg_text(session['firstName'], session['lastName'], session['coursesToCombine'])
-    msg.html = generate_msg_html(session['firstName'], session['lastName'], session['coursesToCombine'])
+    msg.body = generate_msg_text(session['firstName'], session['lastName'], session['coursesToCombine'], session['baseCourse'])
+    msg.html = generate_msg_html(session['firstName'], session['lastName'], session['coursesToCombine'], session['baseCourse'])
     mail.send(msg)
-    return render_template("confirmation.html", coursesToCombine=session['coursesToCombine'])
+    return render_template("confirmation.html", coursesToCombine=session['coursesToCombine'], baseCourse=session['baseCourse'])
 
 
-def generate_msg_text(firstName, lastName, coursesToCombine):
-    opening ="Hello {0} {1},\nYou have asked to have the following courses combined into {2}, {3}:\n\nCourse Name\t(Course Id)\n".format(firstName, lastName, coursesToCombine['parsed'], coursesToCombine['name'])
+def generate_msg_text(firstName, lastName, coursesToCombine, baseCourse):
+    opening ="Hello {0} {1},\nYou have asked to have the following courses combined into {2}, {3}:\n\nCourse Name\t(Course Id)\n".format(firstName, lastName, baseCourse['parsed'], baseCourse['name'])
     courseTable = "\n".join("{!s}\t({!s})".format(course['name'], course['code']) for course in coursesToCombine)
     closing = "\nIf this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " ."
     msg_body = opening + courseTable + closing
     return msg_body
 
 
-def generate_msg_html(firstName, lastName, coursesToCombine):
-    opening ="<p>Hello {0} {1},</p><p>You have asked to have the following courses combined into {2}, {3}:</p>".format(firstName, lastName, coursesToCombine['parsed'], coursesToCombine['name'])
+def generate_msg_html(firstName, lastName, coursesToCombine, baseCourse):
+    opening ="<p>Hello {0} {1},</p><p>You have asked to have the following courses combined into {2}, {3}:</p>".format(firstName, lastName, baseCourse['parsed'], baseCourse['name'])
     tableHead = "<table><thead><tr><th>Course Name</th><th>(Course Id)</th></thead>"
     courseTable = "".join("<tr><td>{!s}</td><td>({!s})</td></tr>".format(course['name'], course['code']) for course in coursesToCombine)
     tableClose = "</table>"
@@ -220,7 +228,7 @@ def get_courses(uc):
     kwargs['params'].update({'orgUnitTypeId': app.config['ORG_UNIT_TYPE_ID']})
     r = requests.get(myUrl, **kwargs)
 
-    print(r.json()['Items'])
+    #print(r.json()['Items'])
 
     courseDict = {}
     end = False
@@ -265,7 +273,7 @@ def add_course(courseId):
     r = requests.get(myUrl, **kwargs)
     if r.json():
         response = r.json()
-        print r.json()
+        #print r.json()
         courseInfo = {'courseId': courseId,
             'name': response['Name'],
             'code': response['Code'],
