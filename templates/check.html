@@ -1,0 +1,10 @@
+{% extends "template.html" %}
+{% block content %}
+	<h2>Step 3 Redux: Double Check</h2>
+		<p>The base course you selected was not among those you requested to have combined. Did you want the following courses combined into {{ baseCourse['parsed'] }}, {{ baseCourse['name'] }}?</p>
+			<ul>{% for row in coursesToCombine %}
+			<li>{{ row['parsed'] }}, {{ row['name'] }}</li>
+			{% endfor %}</ul>
+        <p><a href="{{ url_for('confirm_selections') }}">Yes, that's the combination I want made.</a></p>
+        <p><a href="{{ url_for('enrollment_handler') }}">No, I had a clicking accident.</a></p>
+{% endblock %}

@@ -129,12 +129,8 @@ def enrollment_handler():
             baseCourse = {}
             baseCourseId =  int(form.baseCourse.data)
             for course in courseDict:
-                print('COURSE ID', course['courseId'])
-                print('BASE COURSE ID', baseCourseId)
                 if course['courseId'] == baseCourseId:
                     baseCourse.update(course)
-                    print('BASECOURSE', baseCourse)
-            print('BASECOURSE', baseCourse)
             session['baseCourse'] = baseCourse
             if len(coursesToCombine) < 2:
                 if request.form['btn'] == 'Add Class':
@@ -145,24 +141,23 @@ def enrollment_handler():
                         add_form.catalogNumber.data,
                         'SEC' + add_form.section.data,
                         add_form.classNumber.data))
-                    #print(get_course(uc, code))
                     courseToAdd = get_course(uc, code)
-                    #session['courseDict'][session['semCode']].append(add_course(courseDict, add_form.courseId.data))
                     session['courseDict'][session['semCode']] = update_course_dict(courseDict,
                         courseToAdd['Identifier'],
                         courseToAdd['Name'],
                         code)
-                    #print(session['courseDict'][session['semCode']])
                     return redirect(url_for('enrollment_handler'))
-                    #return render_template("enrollments.html", form=form, add_form=add_form, error=error)
 
                 else:    
                     error = 'You must select at least two courses to combine.'
                     return render_template("enrollments.html", form=form, add_form=add_form, error=error)
+                
             else:
                 session['coursesToCombine'] = coursesToCombine
-                #print(coursesToCombine)
-                return redirect(url_for('confirm_selections'))
+                if baseCourse not in coursesToCombine:
+                    return render_template("check.html", coursesToCombine=coursesToCombine, baseCourse=baseCourse)
+                else:
+                    return redirect(url_for('confirm_selections'))
         else:
             error = 'The form must be invalid for some reason...'
             return render_template("enrollments.html", form=form, add_form=add_form, error=error)
@@ -184,7 +179,7 @@ def confirm_selections():
 def generate_msg_text(firstName, lastName, coursesToCombine, baseCourse):
     opening ="Hello {0} {1},\nYou have asked to have the following courses combined into {2}, {3}:\n\nCourse Name\t(Course Id)\n".format(firstName, lastName, baseCourse['parsed'], baseCourse['name'])
     courseTable = "\n".join("{!s}\t({!s})".format(course['name'], course['code']) for course in coursesToCombine)
-    closing = "\nIf this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " ."
+    closing = "\nIf this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + "."
     msg_body = opening + courseTable + closing
     return msg_body
 
@@ -194,7 +189,7 @@ def generate_msg_html(firstName, lastName, coursesToCombine, baseCourse):
     tableHead = "<table><thead><tr><th>Course Name</th><th>(Course Id)</th></thead>"
     courseTable = "".join("<tr><td>{!s}</td><td>({!s})</td></tr>".format(course['name'], course['code']) for course in coursesToCombine)
     tableClose = "</table>"
-    closing = "<p>If this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + " .</p>"
+    closing = "<p>If this is incorrect, please contact our D2L site administrator at " + app.config['EMAIL_SITE_ADMIN'] + ".</p>"
     msg_html = opening + tableHead + courseTable + tableClose + closing
     return msg_html
 
