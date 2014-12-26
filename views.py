@@ -108,53 +108,39 @@ def select_semester():
         return render_template("semester.html", form=form, error=error)
 
 
-
 @app.route('/enrollments', methods=['GET', 'POST'])
 @login_required
 def enrollment_handler():
-
     error = None
     uc = appContext.create_user_context(
             d2l_user_context_props_dict=session['userContext'])
-
     courseDict = session['courseDict'][session['semCode']]
     form = SelectCoursesForm(request.form, prefix="form")
-    form.courseIds.choices = get_courseId_choices(courseDict)
-    form.baseCourse.choices = get_baseCourse_choices(courseDict)
-
+    form.courseIds.choices, form.baseCourse.choices = get_courseId_choices(courseDict), get_baseCourse_choices(courseDict)
     add_form = AdditionalCourseForm(request.form, prefix="add_form")
     if request.method == 'POST':
         if form.is_submitted():
-            courseIds = form.courseIds.data
-            coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
-            baseCourse = {}
-            baseCourseId =  int(form.baseCourse.data)
-            for course in courseDict:
-                if course['courseId'] == baseCourseId:
-                    baseCourse.update(course)
-            session['baseCourse'] = baseCourse
-            if len(coursesToCombine) < 2:
-                if request.form['btn'] == 'Add Class':
-                    code = '_'.join(('UWOSH',
-                        session['semCode'],
-                        add_form.sessionLength.data,
-                        add_form.subject.data,
-                        add_form.catalogNumber.data,
-                        'SEC' + add_form.section.data,
-                        add_form.classNumber.data))
-                    courseToAdd = get_course(uc, code)
-                    session['courseDict'][session['semCode']] = update_course_dict(courseDict,
-                        courseToAdd['Identifier'],
-                        courseToAdd['Name'],
-                        code)
-                    return redirect(url_for('enrollment_handler'))
-
-                else:    
+            if request.form['btn'] == 'Add Class':
+                code = make_code(add_form)
+                courseToAdd = get_course(uc, code)
+                session['courseDict'][session['semCode']] = update_course_dict(courseDict,
+                    courseToAdd['Identifier'],
+                    courseToAdd['Name'],
+                    code)
+                return redirect(url_for('enrollment_handler'))
+            elif request.form['btn'] == 'Submit Request':
+                courseIds = form.courseIds.data
+                coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
+                baseCourse = {}
+                if form.baseCourse.data != 'None':
+                    update_base_course(baseCourse, form.baseCourse.data, courseDict)
+                else:
+                    error = 'You must select a base course into which to combine the courses.'
+                    return render_template("enrollments.html", form=form, add_form=add_form, error=error)
+                if len(coursesToCombine) == 0 or (len(coursesToCombine) == 1 and baseCourse in coursesToCombine):    
                     error = 'You must select at least two courses to combine.'
                     return render_template("enrollments.html", form=form, add_form=add_form, error=error)
-                
-            else:
-                session['coursesToCombine'] = coursesToCombine
+                session['baseCourse'], session['coursesToCombine'] = baseCourse, coursesToCombine
                 if baseCourse not in coursesToCombine:
                     return render_template("check.html", coursesToCombine=coursesToCombine, baseCourse=baseCourse)
                 else:
@@ -301,6 +287,23 @@ def get_baseCourse_choices(courseDict):
         ", " +
         course['parsed'] +
         "</a>") for course in courseDict]
+
+
+def make_code(add_form):
+    return '_'.join(('UWOSH',
+        session['semCode'],
+        add_form.sessionLength.data,
+        add_form.subject.data,
+        add_form.catalogNumber.data,
+        'SEC' + add_form.section.data,
+        add_form.classNumber.data))
+
+
+def update_base_course(baseCourse, baseCourseData, courseDict):
+    baseCourseId = int(baseCourseData)
+    for course in courseDict:
+        if course['courseId'] == baseCourseId:
+            baseCourse.update(course)
 
 
 app.jinja_env.globals.update(parse_code=parse_code)
