@@ -119,8 +119,9 @@ def enrollment_handler():
 
     courseDict = session['courseDict'][session['semCode']]
     form = SelectCoursesForm(request.form, prefix="form")
-    form.courseIds.choices = [(course['courseId'], course['name'] + ", " + course['parsed']) for course in courseDict]
-    form.baseCourse.choices = [(course['courseId'], "<a target=\"_blank\" href='http://" + app.config['LMS_HOST'] + "/d2l/lp/manageCourses/course_offering_info_viewedit.d2l?ou=" + str(course['courseId']) + "'>" + course['name'] + ", " + course['parsed'] + "</a>") for course in courseDict]
+    form.courseIds.choices = get_courseId_choices(courseDict)
+    form.baseCourse.choices = get_baseCourse_choices(courseDict)
+
     add_form = AdditionalCourseForm(request.form, prefix="add_form")
     if request.method == 'POST':
         if form.is_submitted():
@@ -280,6 +281,27 @@ def add_course(courseId):
 def parse_code(code):
     parsed = code.split("_")
     return parsed[3] + " " + parsed[4] + " " + parsed[5]
+
+
+def get_courseId_choices(courseDict):
+    return [(course['courseId'], 
+        course['name'] + ", " + course['parsed']) for course in courseDict]
+
+
+def get_baseCourse_choices(courseDict):
+    linkPrefix = "<a target=\"_blank\" href='http://" + \
+        app.config['LMS_HOST'] + \
+        "/d2l/lp/manageCourses/course_offering_info_viewedit.d2l?ou="
+
+    return [(course['courseId'],
+        linkPrefix +
+        str(course['courseId']) +
+        "'>" +
+        course['name'] +
+        ", " +
+        course['parsed'] +
+        "</a>") for course in courseDict]
+
 
 app.jinja_env.globals.update(parse_code=parse_code)
 
