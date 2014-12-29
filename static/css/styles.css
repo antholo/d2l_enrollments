@@ -1,8 +1,9 @@
-.error {
+.app_error {
     color: red;
-    font-size: .8em;
+    font-size: medium;
 }
 
-.flash {
-    color: red;
-    font-size: .8em;
+.app_flash {
+    color: green;
+    font-size: medium;
+}

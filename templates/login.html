@@ -1,5 +1,8 @@
 {% extends "template.html" %}
 {% block content %}
 <h2>Step 1: Login</h2>
+    <form method="post" action="/">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    </form>
 <p>Please <a href="{{ authUrl }}">login</a> to continue</p>
 {% endblock %}

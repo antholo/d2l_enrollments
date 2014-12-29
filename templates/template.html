@@ -375,10 +375,10 @@
                     <div id="content">
                         <h1 class="documentFirstHeading">Course Combine Request</h1>
                         {% for message in get_flashed_messages() %}
-                        <div class="flash">{{ message }}</div>
+                            <div class="app_flash">{{ message }}</div>
                         {% endfor %}
                         {% if error %}
-                        <p class="error"><strong>Error:</strong> {{ error }}</p>
+                            <div class="app_error">{{ error }}</div>
                         {% endif %}
                         {% block content %}
                         {% endblock %}

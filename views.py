@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for
 from flask_mail import Mail, Message
+from flask_wtf.csrf import CsrfProtect
 from functools import wraps
 from form import SelectSemesterForm, SelectCoursesForm, AdditionalCourseForm
 import requests
@@ -13,6 +14,7 @@ app = Flask(__name__)
 app.config.from_pyfile('app_config.cfg')
 mail = Mail(app)
 app.secret_key = os.urandom(24)
+CsrfProtect(app)
 
 appContext = d2lauth.fashion_app_context(app_id=app.config['APP_ID'],
                                          app_key=app.config['APP_KEY'])
@@ -120,14 +122,25 @@ def enrollment_handler():
     add_form = AdditionalCourseForm(request.form, prefix="add_form")
     if request.method == 'POST':
         if form.is_submitted():
-            if request.form['btn'] == 'Add Class':
+            if request.form['btn'] == 'Add Class' and add_form.validate_on_submit():
+                #add_form.validate()
+                print add_form.errors
                 code = make_code(add_form)
                 courseToAdd = get_course(uc, code)
+                if not courseToAdd:
+                    error = "Could not find a class for the information you entered. Please check course details and try again."
+                    return render_template("enrollments.html", form=form, add_form=add_form, error=error)
                 session['courseDict'][session['semCode']] = update_course_dict(courseDict,
                     courseToAdd['Identifier'],
                     courseToAdd['Name'],
                     code)
                 return redirect(url_for('enrollment_handler'))
+            elif request.form['btn'] == 'Add Class':
+                print("RAW", add_form.errors)
+                error = add_form.errors.values()[0][0]
+                #error = [e[0] for e in error]
+                print("ERROR", error)
+                return render_template("enrollments.html", form=form, add_form=add_form, error=error)
             elif request.form['btn'] == 'Submit Request':
                 courseIds = form.courseIds.data
                 coursesToCombine = [course for course in courseDict if course['courseId'] in courseIds]
@@ -248,7 +261,10 @@ def get_course(uc, code):
     kwargs['params'].update({'orgUnitCode': code})
     kwargs['params'].update({'orgUnitType': app.config['ORG_UNIT_TYPE_ID']})
     r = requests.get(myUrl, **kwargs)
-    return r.json()['Items'][0]
+    try:
+        return r.json()['Items'][0]
+    except IndexError:
+        return False
 
 def add_course(courseId):
     myUrl = uc.create_authenticated_url('/d2l/api/lp/{0}/orgstructure/{1}'.format(app.config['VER'], courseId))

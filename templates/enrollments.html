@@ -2,6 +2,7 @@
 {% block content %}
 	<h2>Step 3: Select Courses To Be Combined</h2>
 	<form role="form" method="post" action="">
+	{{ form.csrf_token }}
 		<h3>Select two or more courses you would like combined into a single course in D2L.</h3>
 		<p><b><a href="#add">A course I want combined is not listed</a></b></p>
 		<p>If you have several combination requests, please submit them separately.</p>
@@ -17,6 +18,7 @@
 		<p>If there is a course you would like combined not listed above, please complete the form below with info from TitanWeb.</p>
 		{{ add_form.courseId }}
 	<form role="form" method="post" action="">
+	{{ form.csrf_token }}
 		<img src='{{ url_for('static', filename='img/TitanWebSample.png') }}'>
 		<p>Subject (Ex: CRIM JUS)<br />{{ add_form.subject }}</p>
 		<p>Catalog # (Ex: 110)<br />{{ add_form.catalogNumber }}</p>

@@ -1,6 +1,9 @@
 {% extends "template.html" %}
 {% block content %}
 	<h2>Step 4: Confirmation</h2>
+        <form method="post" action="/">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        </form>
 		<p>You have asked to have the following courses combined into {{ baseCourse['parsed'] }}, {{ baseCourse['name'] }}:</p>
 			<ul>{% for row in coursesToCombine %}
 			<li>{{ row['parsed'] }}, {{ row['name'] }}</li>

@@ -1,6 +1,9 @@
 {% extends "template.html" %}
 {% block content %}
 	<h2>Step 3 Redux: Double Check</h2>
+        <form method="post" action="/">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        </form>
 		<p>The base course you selected was not among those you requested to have combined. Did you want the following courses combined into {{ baseCourse['parsed'] }}, {{ baseCourse['name'] }}?</p>
 			<ul>{% for row in coursesToCombine %}
 			<li>{{ row['parsed'] }}, {{ row['name'] }}</li>
