@@ -220,15 +220,16 @@ def confirm_selections():
 def generate_msg_text(firstName, lastName, coursesToCombine, baseCourse):
     '''
     Generates confirmation email message text.
-    '''
-    opening ="Hello {0} {1},\nYou have asked to have the following courses" + \
-        "combined into {2}, {3}:\n\nCourse Name\t(Course Id)\n".format(
-        firstName, lastName, baseCourse['parsed'], baseCourse['name'])
+    ''' 
+    greeting = "Hello {0} {1},\n".format(firstName, lastName)
+    opening = "You have asked to have the following courses combined into " + \
+        "{0}, {1}:\n\nCourse Name\t(Course Id)\n".format(baseCourse['parsed'],
+        baseCourse['name'])
     courseTable = "\n".join("{!s}\t({!s})".format(course['name'],
         course['code']) for course in coursesToCombine)
     closing = "\nIf this is incorrect, please contact our D2L site" + \
         "administrator at " + app.config['EMAIL_SITE_ADMIN'] + "."
-    msg_body = opening + courseTable + closing
+    msg_body = greeting + opening + courseTable + closing
     return msg_body
 
 
@@ -236,16 +237,16 @@ def generate_msg_html(firstName, lastName, coursesToCombine, baseCourse):
     '''
     Generates confirmation email message in HTML.
     '''
-    opening ="<p>Hello {0} {1},</p><p>You have asked to have the following" + \
-        "courses combined into {2}, {3}:</p>".format(
-        firstName, lastName, baseCourse['parsed'], baseCourse['name'])
+    greeting = "<p>Hello {0} {1},</p><p>".format(firstName, lastName)
+    opening = "You have asked to have the following courses combined into " +\
+        " {0}, {1}:</p>".format(baseCourse['parsed'], baseCourse['name'])
     tableHead = "<table><thead><tr><th>Course Name</th><th>(Course Id)</th></thead>"
     courseTable = "".join("<tr><td>{!s}</td><td>({!s})</td></tr>".format(
         course['name'], course['code']) for course in coursesToCombine)
     tableClose = "</table>"
     closing = "<p>If this is incorrect, please contact our D2L site" + \
         "administrator at " + app.config['EMAIL_SITE_ADMIN'] + ".</p>"
-    msg_html = opening + tableHead + courseTable + tableClose + closing
+    msg_html = greeting + opening + tableHead + courseTable + tableClose + closing
     return msg_html
 
 
