@@ -144,7 +144,7 @@ def enrollment_handler():
     '''
     error = None
     uc = appContext.create_user_context(
-            d2l_user_context_props_dict=session['userContext'])
+        d2l_user_context_props_dict=session['userContext'])
     courseDict = session['courseDict'][session['semCode']]
     form = SelectCoursesForm(request.form, prefix="form")
     form.courseIds.choices = get_courseId_choices(courseDict)
