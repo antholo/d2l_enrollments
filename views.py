@@ -199,7 +199,7 @@ def confirm_selections():
     '''
     msg = Message(subject='Course Combine Confirmation',
         recipients=[app.config['MAIL_DEFAULT_SENDER'],
-        session['uniqueName'] + app.config['EMAIL_DOMAIN']])
+        session['uniqueName'] + "@" app.config['EMAIL_DOMAIN']])
     msg.body = generate_msg_text(session['firstName'],
         session['lastName'],
         session['coursesToCombine'],
