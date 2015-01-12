@@ -92,6 +92,8 @@ def auth_handler():
     session['lastName'] = r.json()['LastName']
     session['userId'] = r.json()['Identifier']
 
+    print("WHOAMI", r.json())
+
     """PRODUCTION: UNCOMMENT FOLLOWING LINE AND DELETE THE ONE AFTER THAT"""
     #session['uniqueName'] = r.json()['UniqueName']
     session['uniqueName'] = 'lookerb'
@@ -199,7 +201,7 @@ def confirm_selections():
     '''
     msg = Message(subject='Course Combine Confirmation',
         recipients=[app.config['MAIL_DEFAULT_SENDER'],
-        session['uniqueName'] + "@" app.config['EMAIL_DOMAIN']])
+        session['uniqueName'] + "@" + app.config['EMAIL_DOMAIN']])
     msg.body = generate_msg_text(session['firstName'],
         session['lastName'],
         session['coursesToCombine'],
@@ -281,6 +283,10 @@ def get_courses(uc):
     kwargs['params'].update({'roleId':app.config['ROLE_ID']})
     kwargs['params'].update({'orgUnitTypeId': app.config['ORG_UNIT_TYPE_ID']})
     r = requests.get(myUrl, **kwargs)
+
+    print("REASON", r.reason)
+
+
     courseDict = {}
     end = False
     while end == False:
